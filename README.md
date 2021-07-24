@@ -33,6 +33,7 @@ JMPE ONE 100 - jump to the last LOOP if the value in register ONE is equal to 10
 JMPE ONE TWO - jump to the last LOOP if the value in register ONE is equal to the value stored in register TWO
 
 "#" - a hash at the start of a line indicates a single line comment
+
 "##" - two hashes at the beginning of a line indicates the start or end of a multi-line comment
 
 END - use this to end a console or to tell the computer that the program on the file is finished
