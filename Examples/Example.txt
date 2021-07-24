@@ -1,7 +1,7 @@
+#this program sums the numbers between 1 and 100
 LOOP
 INC ONE
 INC TWO ONE
 JMPL ONE 100
-OUT ONE
 OUT TWO
 END
