@@ -12,7 +12,7 @@ jumpPositionAndNames = {}
 
 currentBlockComment = False
 
-textFile = open("Examples/Factorial.sk", "r")
+textFile = open("Examples/SimpleNestedLoopsExample.sk", "r")
 
 
 
@@ -388,9 +388,15 @@ for line in textFile:
     elif userInput[0] == "#":
         pass
 
-    elif userInput == "END":
-        running = False
+    elif userInput == "END" or userInput == "END\n":
+        #end the program whether END is the last line or there is one after it
+        #only this file reading version needs the "END\n" because of reading lines
+        break
 
+
+    elif userInput == "\n":
+        #if it's an empty line, ignore it
+        pass
 
     else:
 
@@ -398,7 +404,5 @@ for line in textFile:
 
         commandToRun = userInput[0]
         commandHistory.append(userInput)  # need this for loop functionality
-        exec(commandToRun + "(userInput)")  # this won't always work as sometimes commands can have more than one argument, but this system could still be used if I can sort out the commands. Or I could pass the exec the rest of userInput so that it was general to all functions and handle things that way
+        exec(commandToRun + "(userInput)")
 textFile.close()
-# add up all numbers between 0-100
-# start ONE num at zero, INC ONE, INC TWO ONE, JMPL ONE 100

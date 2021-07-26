@@ -1,2 +1,0 @@
-program to calculate factorial
-program to output squares between 0 and 1000(1*1 is one of them, 2*2 is another and so forth)

@@ -385,6 +385,9 @@ while running:
     elif userInput == "END":
         running = False
 
+    elif userInput == "\n":
+        #if it's an empty line, ignore it
+        pass
 
     else:
 

@@ -1,0 +1,13 @@
+#this program will print out all the squares between 1 and 100
+SET ONE 1
+#ONE will keep track of starting N, TWO will be used to manipulate it
+SET THREE 100
+#100 will not be squared in this case, in order for it to be squared, 101 would need to be input
+
+LOOP A
+SET TWO ONE
+MLT TWO TWO
+OUT TWO
+INC ONE
+JMPL ONE THREE A
+END

@@ -1,19 +1,14 @@
-#I'll need to implement multiplication before I do this
-#set ONE to the number you want the factorial of
-#TWO is one less than that, THREE is the sum of the multiplication
 SET ONE 5
-#this is the N value
-SET TWO 0
-SET THREE 0
-SET FOUR 0
+SET TWO 5
+#ONE to keep track of N, TWO to multiply it with
+
 LOOP A
-SET TWO ONE
-DEC TWO
-SET FOUR ONE
-MLT FOUR TWO
-INC THREE FOUR
+SET THREE ONE
+DEC THREE
+#THREE = N-1
+MLT TWO THREE
+#TWO is the snowball, accumulating all the multiplications
 DEC ONE
-JMPL ONE 0 A
-OUT THREE
+JMPG ONE 1 A
+OUT TWO
 END
-#Doesn't work at the moment

@@ -6,6 +6,7 @@ SET THREE 1
 SET FOUR -1
 #I set it to negative one because the first time it is incremented in the loop it is actually incrementing, so this is to counterbalance it
 #FOUR acts as C, which will store the next term before it's transfered to B
+
 LOOP A
 INC FOUR THREE
 INC FOUR TWO

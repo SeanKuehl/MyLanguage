@@ -1,0 +1,15 @@
+#this program demonstrates the use of nested loops
+SET ONE 0
+SET TWO 5
+SET THREE 0
+SET FOUR 100
+
+LOOP B
+LOOP A
+INC ONE
+JMPL ONE TWO A
+INC THREE ONE
+SET ONE 0
+JMPL THREE FOUR B
+OUT THREE
+END
