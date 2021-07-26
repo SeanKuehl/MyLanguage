@@ -12,15 +12,16 @@ jumpPositionAndNames = {}
 
 currentBlockComment = False
 
-textFile = open("Examples/Fibonacci.sk", "r")
+textFile = open("Examples/Factorial.sk", "r")
 
 
-def INC(passedRegister):
 
-    # if passedRegister only has two items, it simply increments a
+def INC(passedCommand):
+
+    # if passedCommand only has two items, it simply increments a
     # register by one
-    if len(passedRegister) == 2:
-        register = registerDict[passedRegister[1]]
+    if len(passedCommand) == 2:
+        register = registerDict[passedCommand[1]]
         usableRegisters[register] += 1
 
     else:
@@ -28,24 +29,24 @@ def INC(passedRegister):
 
         # check if the second argument is a number
         try:
-            isInteger = isinstance(int(passedRegister[2]), int)
+            isInteger = isinstance(int(passedCommand[2]), int)
 
-            register = registerDict[passedRegister[1]]
-            usableRegisters[register] += int(passedRegister[2])
+            register = registerDict[passedCommand[1]]
+            usableRegisters[register] += int(passedCommand[2])
 
 
         except:
             # it's another register
-            register = registerDict[passedRegister[1]]
-            secondRegister = registerDict[passedRegister[2]]
+            register = registerDict[passedCommand[1]]
+            secondRegister = registerDict[passedCommand[2]]
             usableRegisters[register] += usableRegisters[secondRegister]
 
-def DEC(passedRegister):
+def DEC(passedCommand):
 
-    # if passedRegister only has two items, it simply decrements a
+    # if passedCommand only has two items, it simply decrements a
     # register by one
-    if len(passedRegister) == 2:
-        register = registerDict[passedRegister[1]]
+    if len(passedCommand) == 2:
+        register = registerDict[passedCommand[1]]
         usableRegisters[register] -= 1
 
     else:
@@ -53,70 +54,109 @@ def DEC(passedRegister):
 
         # check if the second argument is a number
         try:
-            isInteger = isinstance(int(passedRegister[2]), int)
+            isInteger = isinstance(int(passedCommand[2]), int)
 
-            register = registerDict[passedRegister[1]]
-            usableRegisters[register] -= int(passedRegister[2])
+            register = registerDict[passedCommand[1]]
+            usableRegisters[register] -= int(passedCommand[2])
 
 
         except:
             # it's another register
-            register = registerDict[passedRegister[1]]
-            secondRegister = registerDict[passedRegister[2]]
+            register = registerDict[passedCommand[1]]
+            secondRegister = registerDict[passedCommand[2]]
             usableRegisters[register] -= usableRegisters[secondRegister]
 
-def OUT(passedRegister):
-    register = registerDict[passedRegister[1]]
+def MLT(passedCommand):
+    # check if the second argument is a number
+    try:
+        isInteger = isinstance(int(passedCommand[2]), int)
+
+        register = registerDict[passedCommand[1]]
+        usableRegisters[register] *= int(passedCommand[2])
+
+
+    except:
+        # it's another register
+        register = registerDict[passedCommand[1]]
+        secondRegister = registerDict[passedCommand[2]]
+        usableRegisters[register] *= usableRegisters[secondRegister]
+
+def DIV(passedCommand):
+    # check if the second argument is a number
+    try:
+        isInteger = isinstance(int(passedCommand[2]), int)
+
+        register = registerDict[passedCommand[1]]
+        usableRegisters[register] //= int(passedCommand[2])
+
+
+    except:
+        # it's another register
+        register = registerDict[passedCommand[1]]
+        secondRegister = registerDict[passedCommand[2]]
+        usableRegisters[register] //= usableRegisters[secondRegister]
+
+
+def ECHO(passedCommand):
+    passedCommand.pop(0)  # we want to print everything but the ECHO command, which is the very fist item in passedCommand
+    listToPrint = passedCommand
+    stringToPrint = ' '.join(map(str, listToPrint))
+    print(stringToPrint)
+
+
+def OUT(passedCommand):
+    register = registerDict[passedCommand[1]]
     print(usableRegisters[register])
 
-def INP(passedRegister):
-    register = registerDict[passedRegister[1]]
+def INP(passedCommand):
+    register = registerDict[passedCommand[1]]
 
     registerValue = int(input("Enter A Value: "))
     usableRegisters[register] = registerValue
 
-def SOUT(passedRegister):
-    register = registerDict[passedRegister[1]]
+def SOUT(passedCommand):
+    register = registerDict[passedCommand[1]]
     if usableRegisters[register] > 255 or usableRegisters[register] < 0:
         # it's not a valid ascii character
         print("ERROR")
     else:
         print(chr(usableRegisters[register]))
 
-def SET(passedRegister):
+def SET(passedCommand):
 
 
     try:
-        isInteger = isinstance(int(passedRegister[2]), int)
+        #the second argument is an integer
+        isInteger = isinstance(int(passedCommand[2]), int)
 
-        register = registerDict[passedRegister[1]]
-        usableRegisters[register] = int(passedRegister[2])
+        register = registerDict[passedCommand[1]]
+        usableRegisters[register] = int(passedCommand[2])
 
 
     except:
-        # it's another register
-        register = registerDict[passedRegister[1]]
-        secondRegister = registerDict[passedRegister[2]]
+        #else it's another register
+        register = registerDict[passedCommand[1]]
+        secondRegister = registerDict[passedCommand[2]]
         usableRegisters[register] = usableRegisters[secondRegister]
 
-def LOOP(passedRegister):
+def LOOP(passedCommand):
 
-    mostRecentLoopPosition = (len(commandHistory ) -1)
+    mostRecentLoopPosition = (len(commandHistory)-1)
     #assume it's written: LOOP LOOPNAME
-    if passedRegister[1] in loopPositionsAndNames:
-        #it already has a saved lookup, don't overwrite it
+    if passedCommand[1] in loopPositionsAndNames:
+        #it already has a saved lookup,skip it
         pass
     else:
         #it's new, create a new entry
-        loopPositionsAndNames[passedRegister[1]] = mostRecentLoopPosition  #add new key: value pair
+        loopPositionsAndNames[passedCommand[1]] = mostRecentLoopPosition  #add new key: value pair
 
 
-def JMPL(passedRegister):
+def JMPL(passedCommand):
     # this is Jump if argument A is less than argument B
 
 
     #the name of the loop is always the last one, the third argument
-    nameOfLoop = passedRegister[3]
+    nameOfLoop = passedCommand[3]
 
     if nameOfLoop in jumpPositionAndNames:
         #It already has an entry, don't make a duplicate
@@ -125,25 +165,24 @@ def JMPL(passedRegister):
         jumpPositionAndNames[nameOfLoop] = (len(commandHistory)-1)
 
     indexOfLoop = loopPositionsAndNames[nameOfLoop]
-    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop]-1  #this may still be true, except for loops that are inside loops
-    # the -2 is for the instruction before the current instruction index which must be ajdusted for lists starting at 0
-    # this is the jump if argument A is less than argument B
+    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop]-1
 
-    # check if the first or second argument is a number
-    # do all the commands before the jump until it's True
+
+
+
     indexOfFirstCommandInLoop = indexOfLoop + 1
 
 
 
     try:
         # if the first one is a number, the next must be a register
-        isInteger = isinstance(int(passedRegister[1]), int)
+        isInteger = isinstance(int(passedCommand[1]), int)
 
-        register = registerDict[passedRegister[2]]
+        register = registerDict[passedCommand[2]]
 
         # loop through all the commands until the condition is met
 
-        while int(passedRegister[1]) < usableRegisters[register]:
+        while int(passedCommand[1]) < usableRegisters[register]:
             # go through all the instructions in the loop
             for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                 # +1 needed because max is exclusive
@@ -159,12 +198,12 @@ def JMPL(passedRegister):
 
         try:
             # if the second one is a number
-            isInteger = isinstance(int(passedRegister[2]), int)
+            isInteger = isinstance(int(passedCommand[2]), int)
 
-            register = registerDict[passedRegister[1]]
+            register = registerDict[passedCommand[1]]
 
 
-            while usableRegisters[register] < int(passedRegister[2]):
+            while usableRegisters[register] < int(passedCommand[2]):
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                     # +1 needed because max is exclusive
@@ -177,8 +216,8 @@ def JMPL(passedRegister):
         except:
             # otherwise they are both registers
 
-            register = registerDict[passedRegister[1]]
-            secondRegister = registerDict[passedRegister[2]]
+            register = registerDict[passedCommand[1]]
+            secondRegister = registerDict[passedCommand[2]]
 
 
             while usableRegisters[register] < usableRegisters[secondRegister]:
@@ -193,11 +232,11 @@ def JMPL(passedRegister):
                     exec(command +"(commandHistory[i])")
 
 
-def JMPG(passedRegister):
+def JMPG(passedCommand):
     # this is Jump if argument A is greater than argument B
 
     # the name of the loop is always the last one, the third argument
-    nameOfLoop = passedRegister[3]
+    nameOfLoop = passedCommand[3]
 
     if nameOfLoop in jumpPositionAndNames:
         # It already has an entry, don't make a duplicate
@@ -206,25 +245,22 @@ def JMPG(passedRegister):
         jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
 
     indexOfLoop = loopPositionsAndNames[nameOfLoop]
-    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1  # this may still be true, except for loops that are inside loops
-    # the -2 is for the instruction before the current instruction index which must be ajdusted for lists starting at 0
-    # this is the jump if argument A is less than argument B
+    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1
 
-    # check if the first or second argument is a number
-    # do all the commands before the jump until it's True
+
     indexOfFirstCommandInLoop = indexOfLoop + 1
 
 
 
     try:
         # if the first one is a number, the next must be a register
-        isInteger = isinstance(int(passedRegister[1]), int)
+        isInteger = isinstance(int(passedCommand[1]), int)
 
-        register = registerDict[passedRegister[2]]
+        register = registerDict[passedCommand[2]]
 
         # loop through all the commands until the condition is met
 
-        while int(passedRegister[1]) > usableRegisters[register]:
+        while int(passedCommand[1]) > usableRegisters[register]:
             # go through all the instructions in the loop
             for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                 command = commandHistory[i]
@@ -239,11 +275,11 @@ def JMPG(passedRegister):
 
         try:
             # if the second one is a number
-            isInteger = isinstance(int(passedRegister[2]), int)
+            isInteger = isinstance(int(passedCommand[2]), int)
 
-            register = registerDict[passedRegister[1]]
+            register = registerDict[passedCommand[1]]
 
-            while usableRegisters[register] > int(passedRegister[2]):
+            while usableRegisters[register] > int(passedCommand[2]):
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
                     command = commandHistory[i]
@@ -253,25 +289,25 @@ def JMPG(passedRegister):
         except:
             # otherwise they are both registers
 
-            register = registerDict[passedRegister[1]]
-            secondRegister = registerDict[passedRegister[2]]
+            register = registerDict[passedCommand[1]]
+            secondRegister = registerDict[passedCommand[2]]
 
 
             while usableRegisters[register] > usableRegisters[secondRegister]:
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
-                    # +2 is needed to exclude the loop command from searched command history, +1 needed because max is exclusive
+                    #+1 needed because max is exclusive
 
                     command = commandHistory[i]
                     command = command[0]
                     exec(command +"(commandHistory[i])")
 
 
-def JMPE(passedRegister):
+def JMPE(passedCommand):
     # this is Jump if argument A is equal to argument B
 
     # the name of the loop is always the last one, the third argument
-    nameOfLoop = passedRegister[3]
+    nameOfLoop = passedCommand[3]
 
     if nameOfLoop in jumpPositionAndNames:
         # It already has an entry, don't make a duplicate
@@ -280,24 +316,21 @@ def JMPE(passedRegister):
         jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
 
     indexOfLoop = loopPositionsAndNames[nameOfLoop]
-    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1  # this may still be true, except for loops that are inside loops
-    # the -2 is for the instruction before the current instruction index which must be ajdusted for lists starting at 0
-    # this is the jump if argument A is less than argument B
+    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1
 
-    # check if the first or second argument is a number
-    # do all the commands before the jump until it's True
+
     indexOfFirstCommandInLoop = indexOfLoop + 1
 
 
     try:
         # if the first one is a number, the next must be a register
-        isInteger = isinstance(int(passedRegister[1]), int)
+        isInteger = isinstance(int(passedCommand[1]), int)
 
-        register = registerDict[passedRegister[2]]
+        register = registerDict[passedCommand[2]]
 
         # loop through all the commands until the condition is met
 
-        while int(passedRegister[1]) == usableRegisters[register]:
+        while int(passedCommand[1]) == usableRegisters[register]:
             # go through all the instructions in the loop
             for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
                 command = commandHistory[i]
@@ -312,11 +345,11 @@ def JMPE(passedRegister):
 
         try:
             # if the second one is a number
-            isInteger = isinstance(int(passedRegister[2]), int)
+            isInteger = isinstance(int(passedCommand[2]), int)
 
-            register = registerDict[passedRegister[1]]
+            register = registerDict[passedCommand[1]]
 
-            while usableRegisters[register] == int(passedRegister[2]):
+            while usableRegisters[register] == int(passedCommand[2]):
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
                     command = commandHistory[i]
@@ -326,8 +359,8 @@ def JMPE(passedRegister):
         except:
             # otherwise they are both registers
 
-            register = registerDict[passedRegister[1]]
-            secondRegister = registerDict[passedRegister[2]]
+            register = registerDict[passedCommand[1]]
+            secondRegister = registerDict[passedCommand[2]]
 
 
             while usableRegisters[register] == usableRegisters[secondRegister]:
@@ -338,6 +371,7 @@ def JMPE(passedRegister):
                     command = commandHistory[i]
                     command = command[0]
                     exec(command +"(commandHistory[i])")
+
 
 
 

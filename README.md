@@ -21,6 +21,14 @@ DEC ONE - decrease register ONE by 1
 DEC ONE 5 - decrease register ONE by 5
 DEC ONE TWO - decrease register ONE by the value stored in register TWO
 
+MLT ONE 5 - multiply the value in register ONE by 5
+MLT ONE TWO - multiply the value in register ONE by the value in register TWO
+
+ECHO hello world - output some plain text to the user
+
+DIV ONE 5 - integer divide the value in register ONE by 5
+DIV ONE TWO - integer divide the value in register ONE by the value in register TWO
+
 OUT ONE - output the value stored in register ONE to the screen as an integer
 
 INP ONE - read in a value from the user and store it in register ONE
