@@ -21,16 +21,16 @@ SOUT ONE - output the value stored in register ONE to the screen as an ASCII val
 SET ONE 5 - set the value of register ONE to 5
 SET ONE TWO - set the value of register ONE to the value stored in register TWO
 
-LOOP - this is the line that will be jumped to if any of the JMP... commands are used
+LOOP A - this is the line that will be jumped to if any of the JMP commands are used and invoke A
 
-JMPL ONE 100 - jump to the last LOOP if the value in register ONE is less than 100
-JMPL ONE TWO - jump to the last LOOP if the value in register ONE is less than the value stored in register TWO
+JMPL ONE 100 A - jump to LOOP A if the value in register ONE is less than 100
+JMPL ONE TWO A - jump to LOOP A if the value in register ONE is less than the value stored in register TWO
 
-JMPG ONE 100 - jump to the last LOOP if the value in register ONE is greater than 100
-JMPG ONE TWO - jump to the last LOOP if the value in register ONE is greater than the value stored in register TWO
+JMPG ONE 100 A - jump to LOOP A if the value in register ONE is greater than 100
+JMPG ONE TWO A - jump to LOOP A if the value in register ONE is greater than the value stored in register TWO
 
-JMPE ONE 100 - jump to the last LOOP if the value in register ONE is equal to 100
-JMPE ONE TWO - jump to the last LOOP if the value in register ONE is equal to the value stored in register TWO
+JMPE ONE 100 A - jump to LOOP A if the value in register ONE is equal to 100
+JMPE ONE TWO A - jump to LOOP A if the value in register ONE is equal to the value stored in register TWO
 
 "#" - a hash at the start of a line indicates a single line comment
 

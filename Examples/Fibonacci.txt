@@ -6,7 +6,7 @@ SET THREE 1
 SET FOUR -1
 #I set it to negative one because the first time it is incremented in the loop it is actually incrementing, so this is to counterbalance it
 #FOUR acts as C, which will store the next term before it's transfered to B
-LOOP
+LOOP A
 INC FOUR THREE
 INC FOUR TWO
 #C = A + B
@@ -18,7 +18,7 @@ SET FOUR 0
 #C = 0
 DEC ONE
 #N -= 1
-JMPG ONE -1
+JMPG ONE -1 A
 #I set this to negative one because the zeroth term is included in the series
 #This solution might seem odd, but it provides the full series up to N
 END

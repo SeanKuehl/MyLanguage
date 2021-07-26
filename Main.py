@@ -4,9 +4,8 @@ usableRegisters = [0,0,0,0,0,0,0,0,0,0]
 userInput = ""
 registerDict = {"ONE": 0, "TWO": 1, "THREE": 2, "FOUR": 3, "FIVE": 4, "SIX": 5, "SEVEN": 6, "EIGHT": 7, "NINE": 8, "TEN": 9}
 commandHistory = []
-mostRecentLoopPosition = 0
-#loopPositions = []
-#jumpPositions = []  I might append to this and JMPL will pop from it allowing nested loops
+loopPositionsAndNames = {}
+jumpPositionAndNames = {}
 running = True
 currentBlockComment = False
 
@@ -97,20 +96,38 @@ def SET(passedRegister):
         usableRegisters[register] = usableRegisters[secondRegister]
 
 def LOOP(passedRegister):
-    global mostRecentLoopPosition   #this shouldn't be here, but without it python doesn't recognize the var below as referencing itself from the larger scope
+
     mostRecentLoopPosition = (len(commandHistory ) -1)
-    #loopPositions.append(mostRecentLoopPosition)
+    #assume it's written: LOOP LOOPNAME
+    if passedRegister[1] in loopPositionsAndNames:
+        #it already has a saved lookup, don't overwrite it
+        pass
+    else:
+        #it's new, create a new entry
+        loopPositionsAndNames[passedRegister[1]] = mostRecentLoopPosition  #add new key: value pair
 
 
 def JMPL(passedRegister):
     # this is Jump if argument A is less than argument B
 
-    indexOfInstructionBeforeJump = (len(commandHistory ) -2)  # the -2 is for the instruction before the current instruction index which must be ajdusted for lists starting at 0
+
+    #the name of the loop is always the last one, the third argument
+    nameOfLoop = passedRegister[3]
+
+    if nameOfLoop in jumpPositionAndNames:
+        #It already has an entry, don't make a duplicate
+        pass
+    else:
+        jumpPositionAndNames[nameOfLoop] = (len(commandHistory)-1)
+
+    indexOfLoop = loopPositionsAndNames[nameOfLoop]
+    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop]-1  #this may still be true, except for loops that are inside loops
+    # the -2 is for the instruction before the current instruction index which must be ajdusted for lists starting at 0
     # this is the jump if argument A is less than argument B
 
     # check if the first or second argument is a number
     # do all the commands before the jump until it's True
-    indexOfFirstCommandInLoop = mostRecentLoopPosition + 1
+    indexOfFirstCommandInLoop = indexOfLoop + 1
 
 
 
@@ -161,8 +178,10 @@ def JMPL(passedRegister):
 
 
             while usableRegisters[register] < usableRegisters[secondRegister]:
+
+
                 # go through all the instructions in the loop
-                for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
+                for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                     # +1 needed because max is exclusive
 
                     command = commandHistory[i]
@@ -173,12 +192,23 @@ def JMPL(passedRegister):
 def JMPG(passedRegister):
     # this is Jump if argument A is greater than argument B
 
-    indexOfInstructionBeforeJump = (len(commandHistory ) -2)  # the -2 is for the instruction before the current instruction index which must be ajdusted for lists starting at 0
+    # the name of the loop is always the last one, the third argument
+    nameOfLoop = passedRegister[3]
+
+    if nameOfLoop in jumpPositionAndNames:
+        # It already has an entry, don't make a duplicate
+        pass
+    else:
+        jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
+
+    indexOfLoop = loopPositionsAndNames[nameOfLoop]
+    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1  # this may still be true, except for loops that are inside loops
+    # the -2 is for the instruction before the current instruction index which must be ajdusted for lists starting at 0
     # this is the jump if argument A is less than argument B
 
     # check if the first or second argument is a number
     # do all the commands before the jump until it's True
-    indexOfFirstCommandInLoop = mostRecentLoopPosition + 1
+    indexOfFirstCommandInLoop = indexOfLoop + 1
 
 
 
@@ -192,7 +222,7 @@ def JMPG(passedRegister):
 
         while int(passedRegister[1]) > usableRegisters[register]:
             # go through all the instructions in the loop
-            for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
+            for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                 command = commandHistory[i]
                 command = command[0]  # this is the userInput[0]
                 exec(command +"(commandHistory[i])")
@@ -236,13 +266,23 @@ def JMPG(passedRegister):
 def JMPE(passedRegister):
     # this is Jump if argument A is equal to argument B
 
-    indexOfInstructionBeforeJump = (len(commandHistory ) -2)  # the -2 is for the instruction before the current instruction index which must be ajdusted for lists starting at 0
+    # the name of the loop is always the last one, the third argument
+    nameOfLoop = passedRegister[3]
 
+    if nameOfLoop in jumpPositionAndNames:
+        # It already has an entry, don't make a duplicate
+        pass
+    else:
+        jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
+
+    indexOfLoop = loopPositionsAndNames[nameOfLoop]
+    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1  # this may still be true, except for loops that are inside loops
+    # the -2 is for the instruction before the current instruction index which must be ajdusted for lists starting at 0
+    # this is the jump if argument A is less than argument B
 
     # check if the first or second argument is a number
     # do all the commands before the jump until it's True
-    indexOfFirstCommandInLoop = mostRecentLoopPosition + 1
-
+    indexOfFirstCommandInLoop = indexOfLoop + 1
 
 
     try:
@@ -322,7 +362,6 @@ while running:
         commandToRun = userInput[0]
         commandHistory.append(userInput)
         exec (commandToRun +"(userInput)")
-
 
 
 
