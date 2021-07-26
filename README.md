@@ -1,7 +1,16 @@
-# MyLanguage
-A simple language I made based off of assembly language and the basics of BrainF. It has loops and such should be Turing complete.
+# SILK
+A simple language I made based off of assembly language and the inspiration of BrainF. 
+It has the ability for nested loops and such should be Turing complete.
+The file extension is .sk.
 
-It operates through commands and registers. The registers are ONE-TEN.
+It operates through commands and registers. 
+Each register stores an integer value.
+The registers as follows: ONE, TWO, THREE, FOUR, FIVE,
+SIX, SEVEN, EIGHT, NINE, TEN
+
+NOTE: each command will happen right away, so if you are making a loop within
+a loop, the nested loop will run before you finish the outer loop. 
+
 
 Command examples:
 INC ONE - increase register ONE by 1

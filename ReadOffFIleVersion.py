@@ -12,7 +12,7 @@ jumpPositionAndNames = {}
 
 currentBlockComment = False
 
-textFile = open("Examples/Fibonacci.txt", "r")
+textFile = open("Examples/Fibonacci.sk", "r")
 
 
 def INC(passedRegister):
