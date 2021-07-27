@@ -178,14 +178,28 @@ def IF(passedCommand):
         elif passedCommand[2] == "!":
             conditionalIsTrue = (int(passedCommand[1]) != int(passedCommand[3]))
 
-
+        temp = ""
         for x in range(4,len(passedCommand)):
             #max is exclusive
             stringToExec += passedCommand[x]+" "
-        stringToExec = stringToExec.split()
+            temp += passedCommand[x]+" "
+        stringToExec = stringToExec.split(":")
 
-        if conditionalIsTrue:
-            exec(stringToExec[0] + "(stringToExec)")
+
+        if len(stringToExec) > 1:
+
+            if conditionalIsTrue:
+                for x in stringToExec:
+
+                    temp = x
+                    temp = temp.split()
+                    exec(temp[0] + "(temp)")
+        else:
+
+            stringToExec = stringToExec[0].split()  #[0] needed because stringToExec became a list
+
+            if conditionalIsTrue:
+                exec(stringToExec[0] + "(stringToExec)")
 
     except:
 
@@ -206,14 +220,26 @@ def IF(passedCommand):
             elif passedCommand[2] == "!":
                 conditionalIsTrue = (int(passedCommand[1]) != usableRegisters[register])
 
+            temp = ""
             for x in range(4, len(passedCommand)):
                 # max is exclusive
                 stringToExec += passedCommand[x] + " "
-            stringToExec = stringToExec.split()
+                temp += passedCommand[x] + " "
+            stringToExec = stringToExec.split(":")
 
+            if len(stringToExec) > 1:
 
-            if conditionalIsTrue:
-                exec(stringToExec[0]+"(stringToExec)")
+                if conditionalIsTrue:
+                    for x in stringToExec:
+                        temp = x
+                        temp = temp.split()
+                        exec(temp[0] + "(temp)")
+            else:
+
+                stringToExec = stringToExec[0].split()  # [0] needed because stringToExec became a list
+
+                if conditionalIsTrue:
+                    exec(stringToExec[0] + "(stringToExec)")
 
         except:
 
@@ -233,13 +259,26 @@ def IF(passedCommand):
                 elif passedCommand[2] == "!":
                     conditionalIsTrue = (usableRegisters[register] != int(passedCommand[3]))
 
+                temp = ""
                 for x in range(4, len(passedCommand)):
                     # max is exclusive
                     stringToExec += passedCommand[x] + " "
-                stringToExec = stringToExec.split()
+                    temp += passedCommand[x] + " "
+                stringToExec = stringToExec.split(":")
 
-                if conditionalIsTrue:
-                    exec(stringToExec[0] + "(stringToExec)")
+                if len(stringToExec) > 1:
+
+                    if conditionalIsTrue:
+                        for x in stringToExec:
+                            temp = x
+                            temp = temp.split()
+                            exec(temp[0] + "(temp)")
+                else:
+
+                    stringToExec = stringToExec[0].split()  # [0] needed because stringToExec became a list
+
+                    if conditionalIsTrue:
+                        exec(stringToExec[0] + "(stringToExec)")
 
             except:
 
@@ -259,13 +298,26 @@ def IF(passedCommand):
                     elif passedCommand[2] == "!":
                         conditionalIsTrue = (usableRegisters[register] != usableRegisters[secondRegister])
 
+                    temp = ""
                     for x in range(4, len(passedCommand)):
                         # max is exclusive
                         stringToExec += passedCommand[x] + " "
-                    stringToExec = stringToExec.split()
+                        temp += passedCommand[x] + " "
+                    stringToExec = stringToExec.split(":")
 
-                    if conditionalIsTrue:
-                        exec(stringToExec[0] + "(stringToExec)")
+                    if len(stringToExec) > 1:
+
+                        if conditionalIsTrue:
+                            for x in stringToExec:
+                                temp = x
+                                temp = temp.split()
+                                exec(temp[0] + "(temp)")
+                    else:
+
+                        stringToExec = stringToExec[0].split()  # [0] needed because stringToExec became a list
+
+                        if conditionalIsTrue:
+                            exec(stringToExec[0] + "(stringToExec)")
 
                 except:
                     pass
