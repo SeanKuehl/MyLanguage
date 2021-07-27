@@ -25,6 +25,7 @@ MLT ONE 5 - multiply the value in register ONE by 5
 MLT ONE TWO - multiply the value in register ONE by the value in register TWO
 
 ECHO hello world - output some plain text to the user
+SECHO hello world - output some plain text to the user without a newline after
 
 DIV ONE 5 - integer divide the value in register ONE by 5
 DIV ONE TWO - integer divide the value in register ONE by the value in register TWO
@@ -33,7 +34,9 @@ OUT ONE - output the value stored in register ONE to the screen as an integer
 
 INP ONE - read in a value from the user and store it in register ONE
 
-SOUT ONE - output the value stored in register ONE to the screen as an ASCII value if possible(0-255)
+COUT ONE - output the value stored in register ONE to the screen as an ASCII character if possible(0-255)
+
+SOUT ONE - output the value stored in register ONE to the screen without a newline after
 
 SET ONE 5 - set the value of register ONE to 5
 SET ONE TWO - set the value of register ONE to the value stored in register TWO

@@ -100,9 +100,23 @@ def ECHO(passedCommand):
         stringToPrint += passedCommand[x] + " "
     print(stringToPrint)
 
+def SECHO(passedCommand):
+    #S stands for single line
+    stringToPrint = ""
+    # it starts at 1 because 0 is "ECHO" which should not be printed
+    for x in range(1, len(passedCommand)):
+        # the max is exclusive
+        stringToPrint += passedCommand[x] + " "
+    print(stringToPrint, end =" ")
+
 def OUT(passedCommand):
     register = registerDict[passedCommand[1]]
     print(usableRegisters[register])
+
+def SOUT(passedCommand):
+    #S stands for single line, output something to the user without a newline after
+    register = registerDict[passedCommand[1]]
+    print(usableRegisters[register], end =" ")
 
 def INP(passedCommand):
     register = registerDict[passedCommand[1]]
@@ -110,7 +124,7 @@ def INP(passedCommand):
     registerValue = int(input())
     usableRegisters[register] = registerValue
 
-def SOUT(passedCommand):
+def COUT(passedCommand):
     register = registerDict[passedCommand[1]]
     if usableRegisters[register] > 255 or usableRegisters[register] < 0:
         # it's not a valid ascii character
