@@ -15,7 +15,7 @@ jumpPositionAndNames = {}
 
 currentBlockComment = False
 
-textFile = open("Examples/TicTacToes.sk", "r")
+
 
 
 
@@ -636,7 +636,8 @@ def JMPNE(passedCommand):
                     command = command[0]
                     exec(command +"(commandHistory[i])")
 
-
+fileName = input("Enter the name/path of a SILK program to run: ")
+textFile = open(fileName, "r")
 
 for line in textFile:
     userInput = line
@@ -670,5 +671,5 @@ for line in textFile:
         commandHistory.append(userInput)  # need this for loop functionality
         exec(commandToRun + "(userInput)")
 textFile.close()
-
+input("Hit enter to close the application")
 
