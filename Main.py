@@ -107,7 +107,7 @@ def OUT(passedCommand):
 def INP(passedCommand):
     register = registerDict[passedCommand[1]]
 
-    registerValue = int(input("Enter A Value: "))
+    registerValue = int(input())
     usableRegisters[register] = registerValue
 
 def SOUT(passedCommand):
