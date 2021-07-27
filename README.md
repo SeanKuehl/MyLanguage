@@ -5,8 +5,7 @@ The file extension is .sk.
 
 It operates through commands and registers. 
 Each register stores an integer value.
-The registers as follows: ONE, TWO, THREE, FOUR, FIVE,
-SIX, SEVEN, EIGHT, NINE, TEN
+The registers as follows: ONE-TWENTY
 
 NOTE: each command will happen right away, so if you are making a loop within
 a loop, the nested loop will run before you finish the outer loop. 

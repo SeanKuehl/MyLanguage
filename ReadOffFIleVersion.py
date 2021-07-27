@@ -1,10 +1,13 @@
 
 # set up the ten basic registers
-usableRegisters = [0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0]
+usableRegisters = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
 # other stuff
 userInput = ""
-registerDict = {"ONE": 0, "TWO": 1, "THREE": 2, "FOUR": 3, "FIVE": 4, "SIX": 5, "SEVEN": 6, "EIGHT": 7, "NINE": 8, "TEN": 9}
+registerDict = {"ONE": 0, "TWO": 1, "THREE": 2, "FOUR": 3, "FIVE": 4, "SIX": 5, "SEVEN": 6,
+                "EIGHT": 7, "NINE": 8, "TEN": 9, "ELEVEN":10, "TWELVE":11, "THIRTEEN":12,
+                "FOURTEEN":13, "FIFTEEN":14, "SIXTEEN":15, "SEVENTEEN":16, "EIGHTEEN":17,
+                "NINETEEN":18, "TWENTY":19}
 commandHistory = []
 loopPositionsAndNames = {}
 jumpPositionAndNames = {}
@@ -12,7 +15,7 @@ jumpPositionAndNames = {}
 
 currentBlockComment = False
 
-textFile = open("Examples/ExamplesToDo.txt", "r")
+textFile = open("Examples/TicTacToes.sk", "r")
 
 
 
@@ -96,6 +99,10 @@ def DIV(passedCommand):
         secondRegister = registerDict[passedCommand[2]]
         usableRegisters[register] //= usableRegisters[secondRegister]
 
+def SPACE(passedCommand):
+    print(" ", end="")
+
+
 def ECHO(passedCommand):
 
     stringToPrint = ""
@@ -111,8 +118,8 @@ def SECHO(passedCommand):
     # it starts at 1 because 0 is "ECHO" which should not be printed
     for x in range(1, len(passedCommand)):
         # the max is exclusive
-        stringToPrint += passedCommand[x] + " "
-    print(stringToPrint, end =" ")
+        stringToPrint += passedCommand[x] + ""
+    print(stringToPrint, end ="")
 
 def OUT(passedCommand):
     register = registerDict[passedCommand[1]]
@@ -121,7 +128,7 @@ def OUT(passedCommand):
 def SOUT(passedCommand):
     #S stands for single line, output something to the user without a newline after
     register = registerDict[passedCommand[1]]
-    print(usableRegisters[register], end =" ")
+    print(usableRegisters[register], end ="")
 
 def INP(passedCommand):
     register = registerDict[passedCommand[1]]
