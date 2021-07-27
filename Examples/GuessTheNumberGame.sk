@@ -1,0 +1,14 @@
+#you enter a number and then try to guess it, it will tell you "too high"
+#or "too low" if your guess isn't there and of course it will tell you when you win
+
+ECHO enter a number to guess
+INP ONE
+LOOP A
+ECHO enter a guess
+INP TWO
+IF TWO > ONE ECHO too high
+IF TWO < ONE ECHO too low
+JMPNE ONE TWO A
+ECHO you guessed it! It was:
+OUT ONE
+END

@@ -93,9 +93,11 @@ def DIV(passedCommand):
 
 def ECHO(passedCommand):
 
-    passedCommand.pop(0)    #we want to print everything but the ECHO command, which is the very fist item in passedCommand
-    listToPrint = passedCommand
-    stringToPrint = ' '.join(map(str, listToPrint))
+    stringToPrint = ""
+    #it starts at 1 because 0 is "ECHO" which should not be printed
+    for x in range(1,len(passedCommand)):
+        #the max is exclusive
+        stringToPrint += passedCommand[x] + " "
     print(stringToPrint)
 
 def OUT(passedCommand):
@@ -143,6 +145,124 @@ def LOOP(passedCommand):
     else:
         #it's new, create a new entry
         loopPositionsAndNames[passedCommand[1]] = mostRecentLoopPosition  #add new key: value pair
+
+def IF(passedCommand):
+    #IF ONE/1 <,>,!,= TWO/2 ECHO this is awesome
+    conditionalIsTrue = False
+    register = 0
+    secondRegister = 0
+    stringToExec = ""
+
+    try:
+        #both non operand arguments are integers
+        #operand argument is passedCommand[2]
+        isInteger = isinstance(int(passedCommand[1]), int)
+        isInteger = isinstance(int(passedCommand[3]), int)
+
+        #conditionalIsTrue = exec("int(passedCommand[1]) "+passedCommand[2]+" int(passedCommand[3]")
+
+        if passedCommand[2] == "=":
+            conditionalIsTrue = (int(passedCommand[1]) == int(passedCommand[3]))
+        elif passedCommand[2] == "<":
+            conditionalIsTrue = (int(passedCommand[1]) < int(passedCommand[3]))
+        elif passedCommand[2] == ">":
+            conditionalIsTrue = (int(passedCommand[1]) > int(passedCommand[3]))
+        elif passedCommand[2] == "!":
+            conditionalIsTrue = (int(passedCommand[1]) != int(passedCommand[3]))
+
+
+        for x in range(4,len(passedCommand)):
+            #max is exclusive
+            stringToExec += passedCommand[x]+" "
+        stringToExec = stringToExec.split()
+
+        if conditionalIsTrue:
+            exec(stringToExec[0] + "(stringToExec)")
+
+    except:
+
+
+
+        try:
+            #only the first non operand argument is an integer and the other is a register
+            isInteger = isinstance(int(passedCommand[1]), int)
+            register = registerDict[passedCommand[3]]
+            #conditionalIsTrue = exec("int(passedCommand[1]) " + passedCommand[2] + " usableRegisters[register]")
+
+            if passedCommand[2] == "=":
+                conditionalIsTrue = (int(passedCommand[1]) == usableRegisters[register])
+            elif passedCommand[2] == "<":
+                conditionalIsTrue = (int(passedCommand[1]) < usableRegisters[register])
+            elif passedCommand[2] == ">":
+                conditionalIsTrue = (int(passedCommand[1]) > usableRegisters[register])
+            elif passedCommand[2] == "!":
+                conditionalIsTrue = (int(passedCommand[1]) != usableRegisters[register])
+
+            for x in range(4, len(passedCommand)):
+                # max is exclusive
+                stringToExec += passedCommand[x] + " "
+            stringToExec = stringToExec.split()
+
+
+            if conditionalIsTrue:
+                exec(stringToExec[0]+"(stringToExec)")
+
+        except:
+
+
+            try:
+                #only the second non operand argument is an integer and the other is a register
+                isInteger = isinstance(int(passedCommand[3]), int)
+                register = registerDict[passedCommand[1]]
+
+
+                if passedCommand[2] == "=":
+                    conditionalIsTrue = (usableRegisters[register] == int(passedCommand[3]))
+                elif passedCommand[2] == "<":
+                    conditionalIsTrue = (usableRegisters[register] < int(passedCommand[3]))
+                elif passedCommand[2] == ">":
+                    conditionalIsTrue = (usableRegisters[register] > int(passedCommand[3]))
+                elif passedCommand[2] == "!":
+                    conditionalIsTrue = (usableRegisters[register] != int(passedCommand[3]))
+
+                for x in range(4, len(passedCommand)):
+                    # max is exclusive
+                    stringToExec += passedCommand[x] + " "
+                stringToExec = stringToExec.split()
+
+                if conditionalIsTrue:
+                    exec(stringToExec[0] + "(stringToExec)")
+
+            except:
+
+
+                try:
+                    #both non operand arguments are registers
+                    register = registerDict[passedCommand[1]]
+                    secondRegister = registerDict[passedCommand[3]]
+                    #conditionalIsTrue = exec("usableRegisters[register] " + passedCommand[2] + " usableRegisters[secondRegister]")
+
+                    if passedCommand[2] == "=":
+                        conditionalIsTrue = (usableRegisters[register] == usableRegisters[secondRegister])
+                    elif passedCommand[2] == "<":
+                        conditionalIsTrue = (usableRegisters[register] < usableRegisters[secondRegister])
+                    elif passedCommand[2] == ">":
+                        conditionalIsTrue = (usableRegisters[register] > usableRegisters[secondRegister])
+                    elif passedCommand[2] == "!":
+                        conditionalIsTrue = (usableRegisters[register] != usableRegisters[secondRegister])
+
+                    for x in range(4, len(passedCommand)):
+                        # max is exclusive
+                        stringToExec += passedCommand[x] + " "
+                    stringToExec = stringToExec.split()
+
+                    if conditionalIsTrue:
+                        exec(stringToExec[0] + "(stringToExec)")
+
+                except:
+                    pass
+                #this should never be reached
+
 
 
 def JMPL(passedCommand):
@@ -358,6 +478,76 @@ def JMPE(passedCommand):
 
 
             while usableRegisters[register] == usableRegisters[secondRegister]:
+                # go through all the instructions in the loop
+                for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
+                    #+1 needed because max is exclusive
+
+                    command = commandHistory[i]
+                    command = command[0]
+                    exec(command +"(commandHistory[i])")
+
+
+def JMPNE(passedCommand):
+    # this is Jump if argument A is not equal to argument B
+
+    # the name of the loop is always the last one, the third argument
+    nameOfLoop = passedCommand[3]
+
+    if nameOfLoop in jumpPositionAndNames:
+        # It already has an entry, don't make a duplicate
+        pass
+    else:
+        jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
+
+    indexOfLoop = loopPositionsAndNames[nameOfLoop]
+    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1
+
+
+    indexOfFirstCommandInLoop = indexOfLoop + 1
+
+
+    try:
+        # if the first one is a number, the next must be a register
+        isInteger = isinstance(int(passedCommand[1]), int)
+
+        register = registerDict[passedCommand[2]]
+
+        # loop through all the commands until the condition is met
+
+        while int(passedCommand[1]) != usableRegisters[register]:
+            # go through all the instructions in the loop
+            for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
+                command = commandHistory[i]
+                command = command[0]  # this is the userInput[0]
+                exec(command +"(commandHistory[i])")
+
+
+
+    except:
+        # if the first one is a register
+
+
+        try:
+            # if the second one is a number
+            isInteger = isinstance(int(passedCommand[2]), int)
+
+            register = registerDict[passedCommand[1]]
+
+            while usableRegisters[register] != int(passedCommand[2]):
+                # go through all the instructions in the loop
+                for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
+                    command = commandHistory[i]
+                    command = command[0]
+                    exec(command +"(commandHistory[i])")
+
+        except:
+            # otherwise they are both registers
+
+            register = registerDict[passedCommand[1]]
+            secondRegister = registerDict[passedCommand[2]]
+
+
+            while usableRegisters[register] != usableRegisters[secondRegister]:
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                     #+1 needed because max is exclusive
