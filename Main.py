@@ -663,7 +663,9 @@ def JMPNE(passedCommand):
                     command = command[0]
                     exec(command +"(commandHistory[i])")
 
-
+def END(passedCommand):
+    global running
+    running = False
 
 
 while running:

@@ -15,4 +15,94 @@ SET THIRTEEN 1
 SET FOURTEEN 0
 #this will be the victory bit, the game will loop until this announces a winner
 
-#not finished yet
+LOOP A
+#show the grid
+OUT "/s/s| 1 | 2 | 3 |"
+OUT "-----------------"
+OUT "--| ONE | TWO | THREE |--"
+OUT "-----------------"
+OUT "/s/s| 4 | 5 | 6 |"
+OUT "-----------------"
+OUT "--| FOUR | FIVE | SIX |--"
+OUT "-----------------"
+OUT "/s/s| 7 | 8 | 9 |"
+OUT "-----------------"
+OUT "--| SEVEN | EIGHT | NINE |--"
+OUT "-----------------"
+
+#get and handle the move from player one
+OUT "Player one, enter a spot to take"
+INP TEN
+
+#player one will be represented by ones
+IF TEN = 1 SET ONE 1
+IF TEN = 2 SET TWO 1
+IF TEN = 3 SET THREE 1
+IF TEN = 4 SET FOUR 1
+IF TEN = 5 SET FIVE 1
+IF TEN = 6 SET SIX 1
+IF TEN = 7 SET SEVEN 1
+IF TEN = 8 SET EIGHT 1
+IF TEN = 9 SET NINE 1
+
+#check for player one victory
+SET TEN 0
+
+#check rows
+#these IFs are connected, they are not serial depending on the first, they depend on each other
+IF ONE = 1 IF TWO = 1 IF THREE = 1 SET TEN 1
+IF FOUR = 1 IF FIVE = 1 IF SIX = 1 SET TEN 1
+IF SEVEN = 1 IF EIGHT = 1 IF NINE = 1 SET TEN 1
+
+#check columns
+IF ONE = 1 IF FOUR = 1 IF SEVEN = 1 SET TEN 1
+IF TWO = 1 IF FIVE = 1 IF EIGHT = 1 SET TEN 1
+IF THREE = 1 IF SIX = 1 IF NINE = 1 SET TEN 1
+
+#check diagonals
+IF ONE = 1 IF FIVE = 1 IF NINE = 1 SET TEN 1
+IF THREE = 1 IF FIVE = 1 IF SEVEN = 1 SET TEN 1
+
+#did player one win?
+IF TEN = 1 OUT "player one wins!" : END
+
+#get and handle the move from player two
+OUT "Player two, enter a spot to take"
+INP TEN
+
+#player one will be represented by twos
+IF TEN = 1 SET ONE 2
+IF TEN = 2 SET TWO 2
+IF TEN = 3 SET THREE 2
+IF TEN = 4 SET FOUR 2
+IF TEN = 5 SET FIVE 2
+IF TEN = 6 SET SIX 2
+IF TEN = 7 SET SEVEN 2
+IF TEN = 8 SET EIGHT 2
+IF TEN = 9 SET NINE 2
+
+#check for player two victory
+SET TEN 0
+
+#check rows
+#these IFs are connected, they are not serial depending on the first, they depend on each other
+IF ONE = 2 IF TWO = 2 IF THREE = 2 SET TEN 2
+IF FOUR = 2 IF FIVE = 2 IF SIX = 2 SET TEN 2
+IF SEVEN = 2 IF EIGHT = 2 IF NINE = 2 SET TEN 2
+
+#check columns
+IF ONE = 2 IF FOUR = 2 IF SEVEN = 2 SET TEN 2
+IF TWO = 2 IF FIVE = 2 IF EIGHT = 2 SET TEN 2
+IF THREE = 2 IF SIX = 2 IF NINE = 2 SET TEN 2
+
+#check diagonals
+IF ONE = 2 IF FIVE = 2 IF NINE = 2 SET TEN 2
+IF THREE = 2 IF FIVE = 2 IF SEVEN = 2 SET TEN 2
+
+#did player two win?
+IF TEN = 2 OUT "player two wins!" : END
+
+JMPNE TEN 100 A
+#this is just to keep the game going until one of the END conditions in the IFs are triggered
+
+END

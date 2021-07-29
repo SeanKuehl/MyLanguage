@@ -11,7 +11,7 @@ registerDict = {"ONE": 0, "TWO": 1, "THREE": 2, "FOUR": 3, "FIVE": 4, "SIX": 5, 
 commandHistory = []
 loopPositionsAndNames = {}
 jumpPositionAndNames = {}
-
+running = True
 
 currentBlockComment = False
 
@@ -101,6 +101,9 @@ def DIV(passedCommand):
 
 
 def OUT(passedCommand):
+
+
+
     # format is BOUT "stuff which will be substituted"
     stringCollectedTerms = ""
     # collect the terms, they will be seperated due to the split() that got them here
@@ -315,6 +318,7 @@ def IF(passedCommand):
                         for x in stringToExec:
                             temp = x
                             temp = temp.split()
+
                             exec(temp[0] + "(temp)")
                 else:
 
@@ -366,6 +370,9 @@ def IF(passedCommand):
                     pass
                 #this should never be reached
 
+def END(passedCommand):
+    global running
+    running = False
 
 
 
@@ -591,6 +598,7 @@ def JMPE(passedCommand):
                     exec(command +"(commandHistory[i])")
 
 
+
 def JMPNE(passedCommand):
     # this is Jump if argument A is not equal to argument B
 
@@ -664,6 +672,10 @@ fileName = input("Enter the name/path of a SILK program to run: ")
 textFile = open(fileName, "r")
 
 for line in textFile:
+
+    if running == False:
+        break
+
     userInput = line
 
     # add comment facility
@@ -694,6 +706,9 @@ for line in textFile:
 
         commandHistory.append(userInput)  # need this for loop functionality
         exec(commandToRun + "(userInput)")
+
+
+
 textFile.close()
 input("Hit enter to close the application")
 
