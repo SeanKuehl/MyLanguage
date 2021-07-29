@@ -14,7 +14,6 @@ currentBlockComment = False
 
 
 
-
 def INC(passedCommand):
 
     # if passedCommand only has two items, it simply increments a
@@ -98,30 +97,29 @@ def DIV(passedCommand):
 
 def OUT(passedCommand):
 
-    #format is BOUT "stuff which will be substituted"
+
+
+    # format is BOUT "stuff which will be substituted"
     stringCollectedTerms = ""
-    #collect the terms, they will be seperated due to the split() that got them here
-    for x in range(1,len(passedCommand)):
-        #It's 1-len(passedCommand) because passedCommand[0] is BOUT and the max is exclusive
-        stringCollectedTerms += passedCommand[x]+" "
+    # collect the terms, they will be seperated due to the split() that got them here
+    for x in range(1, len(passedCommand)):
+        # It's 1-len(passedCommand) because passedCommand[0] is BOUT and the max is exclusive
+        stringCollectedTerms += passedCommand[x] + " "
 
-    #remove the quotations, the first and last charactersBOU
-    stringCollectedTerms = stringCollectedTerms[1:-2]   #-2 is shorthand for the second last element
+    # remove the quotations, the first and last charactersBOU
+    stringCollectedTerms = stringCollectedTerms[1:-2]  # -2 is shorthand for the second last element
 
-    #now substitute registers
+    # now substitute registers
     listOfRegisters = list(registerDict.keys())
 
 
-
-    for x in range(0,len(listOfRegisters)):
-        #max is exclusive
+    for x in range(0, len(listOfRegisters)):
+        # max is exclusive
 
         stringCollectedTerms = stringCollectedTerms.replace(listOfRegisters[x], str(usableRegisters[x]))
 
-
-    #now substitute '/s' for space
+    # now substitute '/s' for space
     stringCollectedTerms = stringCollectedTerms.replace("/s", " ")
-
 
     print(stringCollectedTerms)
 
@@ -150,9 +148,6 @@ def SOUT(passedCommand):
     stringCollectedTerms = stringCollectedTerms.replace("/s", " ")
 
     print(stringCollectedTerms, end="")
-
-
-
 
 
 
@@ -239,7 +234,10 @@ def IF(passedCommand):
 
                     temp = x
                     temp = temp.split()
-                    exec(temp[0] + "(temp)")
+                    if running == False:
+                        break
+                    else:
+                        exec(temp[0] + "(temp)")
         else:
 
             stringToExec = stringToExec[0].split()  #[0] needed because stringToExec became a list
@@ -279,7 +277,10 @@ def IF(passedCommand):
                     for x in stringToExec:
                         temp = x
                         temp = temp.split()
-                        exec(temp[0] + "(temp)")
+                        if running == False:
+                            break
+                        else:
+                            exec(temp[0] + "(temp)")
             else:
 
                 stringToExec = stringToExec[0].split()  # [0] needed because stringToExec became a list
@@ -318,7 +319,10 @@ def IF(passedCommand):
                         for x in stringToExec:
                             temp = x
                             temp = temp.split()
-                            exec(temp[0] + "(temp)")
+                            if running == False:
+                                break
+                            else:
+                                exec(temp[0] + "(temp)")
                 else:
 
                     stringToExec = stringToExec[0].split()  # [0] needed because stringToExec became a list
@@ -357,7 +361,10 @@ def IF(passedCommand):
                             for x in stringToExec:
                                 temp = x
                                 temp = temp.split()
-                                exec(temp[0] + "(temp)")
+                                if running == False:
+                                    break
+                                else:
+                                    exec(temp[0] + "(temp)")
                     else:
 
                         stringToExec = stringToExec[0].split()  # [0] needed because stringToExec became a list
@@ -369,6 +376,9 @@ def IF(passedCommand):
                     pass
                 #this should never be reached
 
+def END(passedCommand):
+    global running
+    running = False
 
 
 
@@ -404,12 +414,17 @@ def JMPL(passedCommand):
         # loop through all the commands until the condition is met
 
         while int(passedCommand[1]) < usableRegisters[register]:
+            if running == False:
+                break
             # go through all the instructions in the loop
             for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                 # +1 needed because max is exclusive
                 command = commandHistory[i]
                 command = command[0]  # this is the userInput[0]
-                exec(command +"(commandHistory[i])")
+                if running == False:
+                    break
+                else:
+                    exec(command +"(commandHistory[i])")
 
 
 
@@ -425,14 +440,18 @@ def JMPL(passedCommand):
 
 
             while usableRegisters[register] < int(passedCommand[2]):
+                if running == False:
+                    break
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                     # +1 needed because max is exclusive
 
                     command = commandHistory[i]
                     command = command[0]
-
-                    exec(command +"(commandHistory[i])")
+                    if running == False:
+                        break
+                    else:
+                        exec(command +"(commandHistory[i])")
 
         except:
             # otherwise they are both registers
@@ -442,6 +461,8 @@ def JMPL(passedCommand):
 
 
             while usableRegisters[register] < usableRegisters[secondRegister]:
+                if running == False:
+                    break
 
 
                 # go through all the instructions in the loop
@@ -450,7 +471,10 @@ def JMPL(passedCommand):
 
                     command = commandHistory[i]
                     command = command[0]
-                    exec(command +"(commandHistory[i])")
+                    if running == False:
+                        break
+                    else:
+                        exec(command +"(commandHistory[i])")
 
 
 def JMPG(passedCommand):
@@ -482,11 +506,16 @@ def JMPG(passedCommand):
         # loop through all the commands until the condition is met
 
         while int(passedCommand[1]) > usableRegisters[register]:
+            if running == False:
+                break
             # go through all the instructions in the loop
             for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                 command = commandHistory[i]
                 command = command[0]  # this is the userInput[0]
-                exec(command +"(commandHistory[i])")
+                if running == False:
+                    break
+                else:
+                    exec(command +"(commandHistory[i])")
 
 
 
@@ -501,11 +530,16 @@ def JMPG(passedCommand):
             register = registerDict[passedCommand[1]]
 
             while usableRegisters[register] > int(passedCommand[2]):
+                if running == False:
+                    break
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
                     command = commandHistory[i]
                     command = command[0]
-                    exec(command +"(commandHistory[i])")
+                    if running == False:
+                        break
+                    else:
+                        exec(command +"(commandHistory[i])")
 
         except:
             # otherwise they are both registers
@@ -515,13 +549,18 @@ def JMPG(passedCommand):
 
 
             while usableRegisters[register] > usableRegisters[secondRegister]:
+                if running == False:
+                    break
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
                     #+1 needed because max is exclusive
 
                     command = commandHistory[i]
                     command = command[0]
-                    exec(command +"(commandHistory[i])")
+                    if running == False:
+                        break
+                    else:
+                        exec(command +"(commandHistory[i])")
 
 
 def JMPE(passedCommand):
@@ -552,11 +591,16 @@ def JMPE(passedCommand):
         # loop through all the commands until the condition is met
 
         while int(passedCommand[1]) == usableRegisters[register]:
+            if running == False:
+                break
             # go through all the instructions in the loop
             for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
                 command = commandHistory[i]
                 command = command[0]  # this is the userInput[0]
-                exec(command +"(commandHistory[i])")
+                if running == False:
+                    break
+                else:
+                    exec(command +"(commandHistory[i])")
 
 
 
@@ -571,11 +615,17 @@ def JMPE(passedCommand):
             register = registerDict[passedCommand[1]]
 
             while usableRegisters[register] == int(passedCommand[2]):
+                #if and END is used (inside a loop or if) it would exit the for loop but not here unless I have this
+                if running == False:
+                    break
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
                     command = commandHistory[i]
                     command = command[0]
-                    exec(command +"(commandHistory[i])")
+                    if running == False:
+                        break
+                    else:
+                        exec(command +"(commandHistory[i])")
 
         except:
             # otherwise they are both registers
@@ -585,13 +635,19 @@ def JMPE(passedCommand):
 
 
             while usableRegisters[register] == usableRegisters[secondRegister]:
+                if running == False:
+                    break
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                     #+1 needed because max is exclusive
 
                     command = commandHistory[i]
                     command = command[0]
-                    exec(command +"(commandHistory[i])")
+                    if running == False:
+                        break
+                    else:
+                        exec(command +"(commandHistory[i])")
+
 
 
 def JMPNE(passedCommand):
@@ -622,11 +678,16 @@ def JMPNE(passedCommand):
         # loop through all the commands until the condition is met
 
         while int(passedCommand[1]) != usableRegisters[register]:
+            if running == False:
+                break
             # go through all the instructions in the loop
             for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
                 command = commandHistory[i]
                 command = command[0]  # this is the userInput[0]
-                exec(command +"(commandHistory[i])")
+                if running == False:
+                    break
+                else:
+                    exec(command +"(commandHistory[i])")
 
 
 
@@ -641,11 +702,16 @@ def JMPNE(passedCommand):
             register = registerDict[passedCommand[1]]
 
             while usableRegisters[register] != int(passedCommand[2]):
+                if running == False:
+                    break
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
                     command = commandHistory[i]
                     command = command[0]
-                    exec(command +"(commandHistory[i])")
+                    if running == False:
+                        break
+                    else:
+                        exec(command +"(commandHistory[i])")
 
         except:
             # otherwise they are both registers
@@ -655,17 +721,18 @@ def JMPNE(passedCommand):
 
 
             while usableRegisters[register] != usableRegisters[secondRegister]:
+                if running == False:
+                    break
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                     #+1 needed because max is exclusive
 
                     command = commandHistory[i]
                     command = command[0]
-                    exec(command +"(commandHistory[i])")
-
-def END(passedCommand):
-    global running
-    running = False
+                    if running == False:
+                        break
+                    else:
+                        exec(command +"(commandHistory[i])")
 
 
 while running:

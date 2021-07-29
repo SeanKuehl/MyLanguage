@@ -23,9 +23,9 @@ DEC ONE TWO - decrease register ONE by the value stored in register TWO
 MLT ONE 5 - multiply the value in register ONE by 5
 MLT ONE TWO - multiply the value in register ONE by the value in register TWO
 
-OUT "hello ONE \s there" - output the text enclosed in parentheses to the user, ONE will be substituted for the value in the register and '/s' will be substituted for a space
+OUT "hello ONE /s there" - output the text enclosed in parentheses to the user, ONE will be substituted for the value in the register and '/s' will be substituted for a space
 
-SOUT "hello ONE \s there" - output the text enclosed in parentheses to the user, ONE will be substituted for the value in the register and '/s' will be substituted for a space, no newline will follow the output
+SOUT "hello ONE /s there" - output the text enclosed in parentheses to the user, ONE will be substituted for the value in the register and '/s' will be substituted for a space, no newline will follow the output
 
 DIV ONE 5 - integer divide the value in register ONE by 5
 DIV ONE TWO - integer divide the value in register ONE by the value in register TWO
@@ -67,4 +67,4 @@ IF 0 = 0 INC ONE : INC TWO - you can use ':' to chain together commands to be ex
 
 "##" - two hashes at the beginning of a line indicates the start or end of a multi-line comment
 
-END - use this to end a console or to tell the computer that the program on the file is finished
+END - use this to end a console or to tell the computer that the program/program on the file is finished
