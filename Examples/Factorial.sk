@@ -10,5 +10,5 @@ MLT TWO THREE
 #TWO is the snowball, accumulating all the multiplications
 DEC ONE
 JMPG ONE 1 A
-OUT TWO
+OUT "TWO"
 END

@@ -99,36 +99,60 @@ def DIV(passedCommand):
         secondRegister = registerDict[passedCommand[2]]
         usableRegisters[register] //= usableRegisters[secondRegister]
 
-def SPACE(passedCommand):
-    print(" ", end="")
-
-
-def ECHO(passedCommand):
-
-    stringToPrint = ""
-    #it starts at 1 because 0 is "ECHO" which should not be printed
-    for x in range(1,len(passedCommand)):
-        #the max is exclusive
-        stringToPrint += passedCommand[x] + " "
-    print(stringToPrint)
-
-def SECHO(passedCommand):
-    #S stands for single line
-    stringToPrint = ""
-    # it starts at 1 because 0 is "ECHO" which should not be printed
-    for x in range(1, len(passedCommand)):
-        # the max is exclusive
-        stringToPrint += passedCommand[x] + ""
-    print(stringToPrint, end ="")
 
 def OUT(passedCommand):
-    register = registerDict[passedCommand[1]]
-    print(usableRegisters[register])
+    # format is BOUT "stuff which will be substituted"
+    stringCollectedTerms = ""
+    # collect the terms, they will be seperated due to the split() that got them here
+    for x in range(1, len(passedCommand)):
+        # It's 1-len(passedCommand) because passedCommand[0] is BOUT and the max is exclusive
+        stringCollectedTerms += passedCommand[x] + " "
+
+    # remove the quotations, the first and last charactersBOU
+    stringCollectedTerms = stringCollectedTerms[1:-2]  # -2 is shorthand for the second last element
+
+    # now substitute registers
+    listOfRegisters = list(registerDict.keys())
+
+
+    for x in range(0, len(listOfRegisters)):
+        # max is exclusive
+
+        stringCollectedTerms = stringCollectedTerms.replace(listOfRegisters[x], str(usableRegisters[x]))
+
+    # now substitute '/s' for space
+    stringCollectedTerms = stringCollectedTerms.replace("/s", " ")
+
+    print(stringCollectedTerms)
+
 
 def SOUT(passedCommand):
-    #S stands for single line, output something to the user without a newline after
-    register = registerDict[passedCommand[1]]
-    print(usableRegisters[register], end ="")
+    # format is BOUT "stuff which will be substituted"
+    stringCollectedTerms = ""
+    # collect the terms, they will be seperated due to the split() that got them here
+    for x in range(1, len(passedCommand)):
+        # It's 1-len(passedCommand) because passedCommand[0] is BOUT and the max is exclusive
+        stringCollectedTerms += passedCommand[x] + " "
+
+    # remove the quotations, the first and last charactersBOU
+    stringCollectedTerms = stringCollectedTerms[1:-2]  # -2 is shorthand for the second last element
+
+    # now substitute registers
+    listOfRegisters = list(registerDict.keys())
+
+
+    for x in range(0, len(listOfRegisters)):
+        # max is exclusive
+
+        stringCollectedTerms = stringCollectedTerms.replace(listOfRegisters[x], str(usableRegisters[x]))
+
+    # now substitute '/s' for space
+    stringCollectedTerms = stringCollectedTerms.replace("/s", " ")
+
+    print(stringCollectedTerms, end="")
+
+
+
 
 def INP(passedCommand):
     register = registerDict[passedCommand[1]]
