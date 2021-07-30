@@ -6,6 +6,8 @@ registerDict = {"ONE": 0, "TWO": 1, "THREE": 2, "FOUR": 3, "FIVE": 4, "SIX": 5, 
                 "EIGHT": 7, "NINE": 8, "TEN": 9, "ELEVEN":10, "TWELVE":11, "THIRTEEN":12,
                 "FOURTEEN":13, "FIFTEEN":14, "SIXTEEN":15, "SEVENTEEN":16, "EIGHTEEN":17,
                 "NINETEEN":18, "TWENTY":19}
+commandList = ["INC", "DEC", "MLT", "OUT", "SOUT", "DIV", "INP", "COUT", "SET", "LOOP",
+               "JMPL", "JMPG", "JMPE", "JMPNE", "IF", "END"]
 commandHistory = []
 loopPositionsAndNames = {}
 jumpPositionAndNames = {}
@@ -155,8 +157,11 @@ def SOUT(passedCommand):
 def INP(passedCommand):
     register = registerDict[passedCommand[1]]
 
-    registerValue = int(input())
-    usableRegisters[register] = registerValue
+    try:
+        registerValue = int(input())
+        usableRegisters[register] = registerValue
+    except:
+        print("ERROR: invalid input, only integers allowed")
 
 def COUT(passedCommand):
     register = registerDict[passedCommand[1]]
@@ -385,354 +390,369 @@ def END(passedCommand):
 def JMPL(passedCommand):
     # this is Jump if argument A is less than argument B
 
+    if len(passedCommand) == 4:
 
-    #the name of the loop is always the last one, the third argument
-    nameOfLoop = passedCommand[3]
+        #the name of the loop is always the last one, the third argument
+        nameOfLoop = passedCommand[3]
 
-    if nameOfLoop in jumpPositionAndNames:
-        #It already has an entry, don't make a duplicate
-        pass
-    else:
-        jumpPositionAndNames[nameOfLoop] = (len(commandHistory)-1)
+        if nameOfLoop in jumpPositionAndNames:
+            #It already has an entry, don't make a duplicate
+            pass
+        else:
+            jumpPositionAndNames[nameOfLoop] = (len(commandHistory)-1)
 
-    indexOfLoop = loopPositionsAndNames[nameOfLoop]
-    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop]-1
-
-
-
-
-    indexOfFirstCommandInLoop = indexOfLoop + 1
+        indexOfLoop = loopPositionsAndNames[nameOfLoop]
+        indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop]-1
 
 
 
-    try:
-        # if the first one is a number, the next must be a register
-        isInteger = isinstance(int(passedCommand[1]), int)
 
-        register = registerDict[passedCommand[2]]
+        indexOfFirstCommandInLoop = indexOfLoop + 1
 
-        # loop through all the commands until the condition is met
-
-        while int(passedCommand[1]) < usableRegisters[register]:
-            if running == False:
-                break
-            # go through all the instructions in the loop
-            for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
-                # +1 needed because max is exclusive
-                command = commandHistory[i]
-                command = command[0]  # this is the userInput[0]
-                if running == False:
-                    break
-                else:
-                    exec(command +"(commandHistory[i])")
-
-
-
-    except:
-        # if the first one is a register
 
 
         try:
-            # if the second one is a number
-            isInteger = isinstance(int(passedCommand[2]), int)
+            # if the first one is a number, the next must be a register
+            isInteger = isinstance(int(passedCommand[1]), int)
 
-            register = registerDict[passedCommand[1]]
+            register = registerDict[passedCommand[2]]
 
+            # loop through all the commands until the condition is met
 
-            while usableRegisters[register] < int(passedCommand[2]):
+            while int(passedCommand[1]) < usableRegisters[register]:
                 if running == False:
                     break
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
                     # +1 needed because max is exclusive
-
                     command = commandHistory[i]
-                    command = command[0]
+                    command = command[0]  # this is the userInput[0]
                     if running == False:
                         break
                     else:
                         exec(command +"(commandHistory[i])")
+
+
 
         except:
-            # otherwise they are both registers
-
-            register = registerDict[passedCommand[1]]
-            secondRegister = registerDict[passedCommand[2]]
+            # if the first one is a register
 
 
-            while usableRegisters[register] < usableRegisters[secondRegister]:
-                if running == False:
-                    break
+            try:
+                # if the second one is a number
+                isInteger = isinstance(int(passedCommand[2]), int)
+
+                register = registerDict[passedCommand[1]]
 
 
-                # go through all the instructions in the loop
-                for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
-                    # +1 needed because max is exclusive
-
-                    command = commandHistory[i]
-                    command = command[0]
+                while usableRegisters[register] < int(passedCommand[2]):
                     if running == False:
                         break
-                    else:
-                        exec(command +"(commandHistory[i])")
+                    # go through all the instructions in the loop
+                    for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
+                        # +1 needed because max is exclusive
+
+                        command = commandHistory[i]
+                        command = command[0]
+                        if running == False:
+                            break
+                        else:
+                            exec(command +"(commandHistory[i])")
+
+            except:
+                # otherwise they are both registers
+
+                register = registerDict[passedCommand[1]]
+                secondRegister = registerDict[passedCommand[2]]
+
+
+                while usableRegisters[register] < usableRegisters[secondRegister]:
+                    if running == False:
+                        break
+
+
+                    # go through all the instructions in the loop
+                    for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
+                        # +1 needed because max is exclusive
+
+                        command = commandHistory[i]
+                        command = command[0]
+                        if running == False:
+                            break
+                        else:
+                            exec(command +"(commandHistory[i])")
+    else:
+        print("ERROR: loop has too few arguments, may be missing name ie. 'A'")
 
 
 def JMPG(passedCommand):
     # this is Jump if argument A is greater than argument B
 
-    # the name of the loop is always the last one, the third argument
-    nameOfLoop = passedCommand[3]
+    if len(passedCommand) == 4:
 
-    if nameOfLoop in jumpPositionAndNames:
-        # It already has an entry, don't make a duplicate
-        pass
-    else:
-        jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
+        # the name of the loop is always the last one, the third argument
+        nameOfLoop = passedCommand[3]
 
-    indexOfLoop = loopPositionsAndNames[nameOfLoop]
-    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1
+        if nameOfLoop in jumpPositionAndNames:
+            # It already has an entry, don't make a duplicate
+            pass
+        else:
+            jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
 
-
-    indexOfFirstCommandInLoop = indexOfLoop + 1
-
+        indexOfLoop = loopPositionsAndNames[nameOfLoop]
+        indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1
 
 
-    try:
-        # if the first one is a number, the next must be a register
-        isInteger = isinstance(int(passedCommand[1]), int)
+        indexOfFirstCommandInLoop = indexOfLoop + 1
 
-        register = registerDict[passedCommand[2]]
-
-        # loop through all the commands until the condition is met
-
-        while int(passedCommand[1]) > usableRegisters[register]:
-            if running == False:
-                break
-            # go through all the instructions in the loop
-            for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
-                command = commandHistory[i]
-                command = command[0]  # this is the userInput[0]
-                if running == False:
-                    break
-                else:
-                    exec(command +"(commandHistory[i])")
-
-
-
-    except:
-        # if the first one is a register
 
 
         try:
-            # if the second one is a number
-            isInteger = isinstance(int(passedCommand[2]), int)
+            # if the first one is a number, the next must be a register
+            isInteger = isinstance(int(passedCommand[1]), int)
 
-            register = registerDict[passedCommand[1]]
+            register = registerDict[passedCommand[2]]
 
-            while usableRegisters[register] > int(passedCommand[2]):
-                if running == False:
-                    break
-                # go through all the instructions in the loop
-                for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
-                    command = commandHistory[i]
-                    command = command[0]
-                    if running == False:
-                        break
-                    else:
-                        exec(command +"(commandHistory[i])")
+            # loop through all the commands until the condition is met
 
-        except:
-            # otherwise they are both registers
-
-            register = registerDict[passedCommand[1]]
-            secondRegister = registerDict[passedCommand[2]]
-
-
-            while usableRegisters[register] > usableRegisters[secondRegister]:
-                if running == False:
-                    break
-                # go through all the instructions in the loop
-                for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
-                    #+1 needed because max is exclusive
-
-                    command = commandHistory[i]
-                    command = command[0]
-                    if running == False:
-                        break
-                    else:
-                        exec(command +"(commandHistory[i])")
-
-
-def JMPE(passedCommand):
-    # this is Jump if argument A is equal to argument B
-
-    # the name of the loop is always the last one, the third argument
-    nameOfLoop = passedCommand[3]
-
-    if nameOfLoop in jumpPositionAndNames:
-        # It already has an entry, don't make a duplicate
-        pass
-    else:
-        jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
-
-    indexOfLoop = loopPositionsAndNames[nameOfLoop]
-    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1
-
-
-    indexOfFirstCommandInLoop = indexOfLoop + 1
-
-
-    try:
-        # if the first one is a number, the next must be a register
-        isInteger = isinstance(int(passedCommand[1]), int)
-
-        register = registerDict[passedCommand[2]]
-
-        # loop through all the commands until the condition is met
-
-        while int(passedCommand[1]) == usableRegisters[register]:
-            if running == False:
-                break
-            # go through all the instructions in the loop
-            for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
-                command = commandHistory[i]
-                command = command[0]  # this is the userInput[0]
-                if running == False:
-                    break
-                else:
-                    exec(command +"(commandHistory[i])")
-
-
-
-    except:
-        # if the first one is a register
-
-
-        try:
-            # if the second one is a number
-            isInteger = isinstance(int(passedCommand[2]), int)
-
-            register = registerDict[passedCommand[1]]
-
-            while usableRegisters[register] == int(passedCommand[2]):
-                #if and END is used (inside a loop or if) it would exit the for loop but not here unless I have this
-                if running == False:
-                    break
-                # go through all the instructions in the loop
-                for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
-                    command = commandHistory[i]
-                    command = command[0]
-                    if running == False:
-                        break
-                    else:
-                        exec(command +"(commandHistory[i])")
-
-        except:
-            # otherwise they are both registers
-
-            register = registerDict[passedCommand[1]]
-            secondRegister = registerDict[passedCommand[2]]
-
-
-            while usableRegisters[register] == usableRegisters[secondRegister]:
+            while int(passedCommand[1]) > usableRegisters[register]:
                 if running == False:
                     break
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
-                    #+1 needed because max is exclusive
-
                     command = commandHistory[i]
-                    command = command[0]
+                    command = command[0]  # this is the userInput[0]
                     if running == False:
                         break
                     else:
                         exec(command +"(commandHistory[i])")
 
+
+
+        except:
+            # if the first one is a register
+
+
+            try:
+                # if the second one is a number
+                isInteger = isinstance(int(passedCommand[2]), int)
+
+                register = registerDict[passedCommand[1]]
+
+                while usableRegisters[register] > int(passedCommand[2]):
+                    if running == False:
+                        break
+                    # go through all the instructions in the loop
+                    for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
+                        command = commandHistory[i]
+                        command = command[0]
+                        if running == False:
+                            break
+                        else:
+                            exec(command +"(commandHistory[i])")
+
+            except:
+                # otherwise they are both registers
+
+                register = registerDict[passedCommand[1]]
+                secondRegister = registerDict[passedCommand[2]]
+
+
+                while usableRegisters[register] > usableRegisters[secondRegister]:
+                    if running == False:
+                        break
+                    # go through all the instructions in the loop
+                    for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
+                        #+1 needed because max is exclusive
+
+                        command = commandHistory[i]
+                        command = command[0]
+                        if running == False:
+                            break
+                        else:
+                            exec(command +"(commandHistory[i])")
+    else:
+        print("ERROR: loop has too few arguments, may be missing name ie. 'A'")
+
+def JMPE(passedCommand):
+    # this is Jump if argument A is equal to argument B
+
+    if len(passedCommand) == 4:
+
+        # the name of the loop is always the last one, the third argument
+        nameOfLoop = passedCommand[3]
+
+        if nameOfLoop in jumpPositionAndNames:
+            # It already has an entry, don't make a duplicate
+            pass
+        else:
+            jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
+
+        indexOfLoop = loopPositionsAndNames[nameOfLoop]
+        indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1
+
+
+        indexOfFirstCommandInLoop = indexOfLoop + 1
+
+
+        try:
+            # if the first one is a number, the next must be a register
+            isInteger = isinstance(int(passedCommand[1]), int)
+
+            register = registerDict[passedCommand[2]]
+
+            # loop through all the commands until the condition is met
+
+            while int(passedCommand[1]) == usableRegisters[register]:
+                if running == False:
+                    break
+                # go through all the instructions in the loop
+                for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
+                    command = commandHistory[i]
+                    command = command[0]  # this is the userInput[0]
+                    if running == False:
+                        break
+                    else:
+                        exec(command +"(commandHistory[i])")
+
+
+
+        except:
+            # if the first one is a register
+
+
+            try:
+                # if the second one is a number
+                isInteger = isinstance(int(passedCommand[2]), int)
+
+                register = registerDict[passedCommand[1]]
+
+                while usableRegisters[register] == int(passedCommand[2]):
+                    #if and END is used (inside a loop or if) it would exit the for loop but not here unless I have this
+                    if running == False:
+                        break
+                    # go through all the instructions in the loop
+                    for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
+                        command = commandHistory[i]
+                        command = command[0]
+                        if running == False:
+                            break
+                        else:
+                            exec(command +"(commandHistory[i])")
+
+            except:
+                # otherwise they are both registers
+
+                register = registerDict[passedCommand[1]]
+                secondRegister = registerDict[passedCommand[2]]
+
+
+                while usableRegisters[register] == usableRegisters[secondRegister]:
+                    if running == False:
+                        break
+                    # go through all the instructions in the loop
+                    for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
+                        #+1 needed because max is exclusive
+
+                        command = commandHistory[i]
+                        command = command[0]
+                        if running == False:
+                            break
+                        else:
+                            exec(command +"(commandHistory[i])")
+    else:
+        print("ERROR: loop has too few arguments, may be missing name ie. 'A'")
 
 
 def JMPNE(passedCommand):
     # this is Jump if argument A is not equal to argument B
 
-    # the name of the loop is always the last one, the third argument
-    nameOfLoop = passedCommand[3]
-
-    if nameOfLoop in jumpPositionAndNames:
-        # It already has an entry, don't make a duplicate
-        pass
-    else:
-        jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
-
-    indexOfLoop = loopPositionsAndNames[nameOfLoop]
-    indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1
-
-
-    indexOfFirstCommandInLoop = indexOfLoop + 1
-
-
-    try:
-        # if the first one is a number, the next must be a register
-        isInteger = isinstance(int(passedCommand[1]), int)
-
-        register = registerDict[passedCommand[2]]
-
-        # loop through all the commands until the condition is met
-
-        while int(passedCommand[1]) != usableRegisters[register]:
-            if running == False:
-                break
-            # go through all the instructions in the loop
-            for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
-                command = commandHistory[i]
-                command = command[0]  # this is the userInput[0]
-                if running == False:
-                    break
-                else:
-                    exec(command +"(commandHistory[i])")
+    if len(passedCommand) == 4:
 
 
 
-    except:
-        # if the first one is a register
+        # the name of the loop is always the last one, the third argument
+        nameOfLoop = passedCommand[3]
+
+        if nameOfLoop in jumpPositionAndNames:
+            # It already has an entry, don't make a duplicate
+            pass
+        else:
+            jumpPositionAndNames[nameOfLoop] = (len(commandHistory) - 1)
+
+        indexOfLoop = loopPositionsAndNames[nameOfLoop]
+        indexOfInstructionBeforeJump = jumpPositionAndNames[nameOfLoop] - 1
+
+
+        indexOfFirstCommandInLoop = indexOfLoop + 1
 
 
         try:
-            # if the second one is a number
-            isInteger = isinstance(int(passedCommand[2]), int)
+            # if the first one is a number, the next must be a register
+            isInteger = isinstance(int(passedCommand[1]), int)
 
-            register = registerDict[passedCommand[1]]
+            register = registerDict[passedCommand[2]]
 
-            while usableRegisters[register] != int(passedCommand[2]):
+            # loop through all the commands until the condition is met
+
+            while int(passedCommand[1]) != usableRegisters[register]:
                 if running == False:
                     break
                 # go through all the instructions in the loop
                 for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
                     command = commandHistory[i]
-                    command = command[0]
+                    command = command[0]  # this is the userInput[0]
                     if running == False:
                         break
                     else:
                         exec(command +"(commandHistory[i])")
+
+
 
         except:
-            # otherwise they are both registers
-
-            register = registerDict[passedCommand[1]]
-            secondRegister = registerDict[passedCommand[2]]
+            # if the first one is a register
 
 
-            while usableRegisters[register] != usableRegisters[secondRegister]:
-                if running == False:
-                    break
-                # go through all the instructions in the loop
-                for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
-                    #+1 needed because max is exclusive
+            try:
+                # if the second one is a number
+                isInteger = isinstance(int(passedCommand[2]), int)
 
-                    command = commandHistory[i]
-                    command = command[0]
+                register = registerDict[passedCommand[1]]
+
+                while usableRegisters[register] != int(passedCommand[2]):
                     if running == False:
                         break
-                    else:
-                        exec(command +"(commandHistory[i])")
+                    # go through all the instructions in the loop
+                    for i in range(indexOfFirstCommandInLoop ,indexOfInstructionBeforeJump +1):
+                        command = commandHistory[i]
+                        command = command[0]
+                        if running == False:
+                            break
+                        else:
+                            exec(command +"(commandHistory[i])")
+
+            except:
+                # otherwise they are both registers
+
+                register = registerDict[passedCommand[1]]
+                secondRegister = registerDict[passedCommand[2]]
+
+
+                while usableRegisters[register] != usableRegisters[secondRegister]:
+                    if running == False:
+                        break
+                    # go through all the instructions in the loop
+                    for i in range(indexOfFirstCommandInLoop,indexOfInstructionBeforeJump +1):
+                        #+1 needed because max is exclusive
+
+                        command = commandHistory[i]
+                        command = command[0]
+                        if running == False:
+                            break
+                        else:
+                            exec(command +"(commandHistory[i])")
+    else:
+        print("ERROR: loop has too few arguments, may be missing name ie. 'A'")
 
 
 while running:
@@ -761,7 +781,12 @@ while running:
 
         commandToRun = userInput[0]
         commandHistory.append(userInput)
-        exec(commandToRun +"(userInput)")
+
+        if commandToRun in commandList:
+            exec(commandToRun + "(userInput)")
+        else:
+
+            print("ERROR: '" + commandToRun + "' is not a valid command")
 
 
 
