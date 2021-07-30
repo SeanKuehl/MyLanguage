@@ -223,6 +223,11 @@ def IF(passedCommand):
             conditionalIsTrue = (int(passedCommand[1]) > int(passedCommand[3]))
         elif passedCommand[2] == "!":
             conditionalIsTrue = (int(passedCommand[1]) != int(passedCommand[3]))
+        else:
+            print("ERROR: Invalid operand, only '=','<','>','!' are accepted, expression will be assumed false")
+            conditionalIsTrue = False
+
+
 
         temp = ""
         for x in range(4,len(passedCommand)):
@@ -268,6 +273,10 @@ def IF(passedCommand):
                 conditionalIsTrue = (int(passedCommand[1]) > usableRegisters[register])
             elif passedCommand[2] == "!":
                 conditionalIsTrue = (int(passedCommand[1]) != usableRegisters[register])
+            else:
+                print("ERROR: Invalid operand, only '=','<','>','!' are accepted, expression will be assumed false")
+                conditionalIsTrue = False
+
 
             temp = ""
             for x in range(4, len(passedCommand)):
@@ -310,6 +319,10 @@ def IF(passedCommand):
                     conditionalIsTrue = (usableRegisters[register] > int(passedCommand[3]))
                 elif passedCommand[2] == "!":
                     conditionalIsTrue = (usableRegisters[register] != int(passedCommand[3]))
+                else:
+                    print("ERROR: Invalid operand, only '=','<','>','!' are accepted, expression will be assumed false")
+                    conditionalIsTrue = False
+
 
                 temp = ""
                 for x in range(4, len(passedCommand)):
@@ -352,6 +365,10 @@ def IF(passedCommand):
                         conditionalIsTrue = (usableRegisters[register] > usableRegisters[secondRegister])
                     elif passedCommand[2] == "!":
                         conditionalIsTrue = (usableRegisters[register] != usableRegisters[secondRegister])
+                    else:
+                        print("ERROR: Invalid operand, only '=','<','>','!' are accepted, expression will be assumed false")
+                        conditionalIsTrue = False
+
 
                     temp = ""
                     for x in range(4, len(passedCommand)):
@@ -380,6 +397,8 @@ def IF(passedCommand):
                 except:
                     pass
                 #this should never be reached
+
+
 
 def END(passedCommand):
     global running
@@ -754,6 +773,30 @@ def JMPNE(passedCommand):
     else:
         print("ERROR: loop has too few arguments, may be missing name ie. 'A'")
 
+def CheckForMiscapitalizedRegisters(passedCommand):
+
+    numOfCorrectRegisters = 0
+    numOfTotalRegisters = 0
+
+
+    # check how many registers are in the command
+    for x in passedCommand:
+        if x in registerDict.keys():
+            numOfCorrectRegisters += 1
+
+    #check how many registers there are if we account for miscapitalization
+    for x in passedCommand:
+        x = x.upper()
+        if x in registerDict.keys():
+            numOfTotalRegisters += 1
+
+    if numOfTotalRegisters > numOfCorrectRegisters:
+        print("ERROR: incorrect register")
+        return False    #don't run the command
+    else:
+        return True
+
+
 
 while running:
     userInput = input("Enter A Command: ")
@@ -782,11 +825,12 @@ while running:
         commandToRun = userInput[0]
         commandHistory.append(userInput)
 
-        if commandToRun in commandList:
-            exec(commandToRun + "(userInput)")
-        else:
+        if CheckForMiscapitalizedRegisters(userInput):
+            if commandToRun in commandList:
+                exec(commandToRun + "(userInput)")
+            else:
 
-            print("ERROR: '" + commandToRun + "' is not a valid command")
+                print("ERROR: '" + commandToRun + "' is not a valid command")
 
 
 
